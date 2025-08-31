@@ -1,17 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
     const ojisanPhrases = [
-        "ヤッホー、まなチャン、元気カナ？オジサンは、下半身が元気だよ（笑）",
-        "おっはー！今日も一日、頑張ろうネ！チュッ😘",
-        "ゆきチャンから元気もらいたいナ！なんつっ亭☆",
+        "ヤッホー、まなチャン、元気カナ？オジサンは、下半身が、元気だよ（笑）",
+        "おっはー！今日も、一日、頑張ろうネ！チュッ😘",
+        "ゆきチャン、から、元気、もらいたいナ！なんつっ亭☆",
         "愛チャン、最近、返事が、少ないね。オイラ、さびしいよ(^_^;)",
         "オジサンの、お昼ご飯は、かつ丼、だったよ。ユキチャンと、食べたかったナ😅",
         "チュッチュッチュッチュー( ^з^)☆",
-        "ひなチャン、週末は、何してるのかな？(^_^;)",
+        "ひなチャン、週末は、何してるのかな？(^_^;)(^_^;)",
         "オジサンは、一匹狼、だけど、トモチャンに、暖めてもらいたいナ！ナンツッテ（笑）",
         "オジサンの、ランチは、生姜焼きだよはいあーんして😘",
         "マキチャンの、下着の色を、想像しながら、午後も、頑張るね",
         "人、って漢字は、ユキミチャンと、オジサンが、くっついて、できてるんだヨ！",
-        "愛してるよ！ナンツッテ(^ε^)-☆"
+        "疲れたら、オジサンの、家、来てもいいよ？？",
+        "オジサン、の、ことが気になる？？ミイチャン、エッチ、だね。。。いいよ",
+        "😘😘😘ミッチャン😘😘😘",
+        "愛してるよ！ナンツッテ(^ε^)☆"
     ];
 
     // --- DOM Elements ---
@@ -30,11 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let cleanPhrase = '';
     let availablePhrases = [];
 
-    // --- FINALLY Corrected Hardcoded Regex ---
-    const tokenizerRegex = /(\(^_^;\)|\(\^ε\^\)-☆)/g;
-    const isKaomojiRegex = /^(\(^_^;\)|\(\^ε\^\)-☆)$/;
-    const skippableForCleanRegex = /(\(^_^;\)|\(\^ε\^\)-☆|〜|～|w| |　|[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}])/gu;
-    const skippableForTestRegex = /^(\(^_^;\)|\(\^ε\^\)-☆|〜|～|w| |　|[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}])$/u;
+    // --- Corrected Hardcoded Regex ---
+    const parenthesesPattern = '(\\([^)]*\\)|（[^）]*）)';
+
+    const tokenizerRegex = new RegExp(parenthesesPattern, 'g');
+    const isKaomojiRegex = new RegExp(`^${parenthesesPattern}$`);
+    const skippableForCleanRegex = new RegExp(`${parenthesesPattern}|〜|～|w| |　|[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]`, 'gu');
+    const skippableForTestRegex = new RegExp(`${parenthesesPattern}|〜|～|w| |　|[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]`, 'u');
     // --- End Corrected Hardcoded Regex ---
 
     function startGame() {
@@ -66,13 +71,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         textToTypeElement.innerHTML = '';
         const parts = phrase.split(tokenizerRegex).filter(p => p && p.length > 0);
+        console.log('Phrase:', phrase);
+        console.log('Parts:', parts);
 
         parts.forEach(part => {
+            console.log('Processing part:', part);
             if (isKaomojiRegex.test(part)) {
+                console.log('Part is kaomoji:', part);
                 const charSpan = document.createElement('span');
                 charSpan.innerText = part;
                 textToTypeElement.appendChild(charSpan);
             } else {
+                console.log('Part is not kaomoji:', part);
                 Array.from(part).forEach(char => {
                     const charSpan = document.createElement('span');
                     charSpan.innerText = char;
@@ -102,10 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (typedChar === originalText) {
                         charSpan.classList.add('correct');
                         charSpan.classList.remove('incorrect');
-                    } else {
-                        charSpan.classList.add('incorrect');
-                        charSpan.classList.remove('correct');
-                        allCorrectSoFar = false;
                     }
                     typedIndex++;
                 } else {
