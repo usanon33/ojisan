@@ -13,7 +13,31 @@ h1 {
     color: #333;
 }
 
+#title-screen {
+    text-align: center;
+}
+
+#title-image {
+    width: 800px;
+    height: 600px;
+    object-fit: cover; /* Prevents image distortion */
+    border: 2px solid #ccc;
+    margin: 20px auto;
+    cursor: pointer; /* Make it look clickable */
+}
+
+#start-button {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+}
+
 #game-container {
+    display: none; /* Initially hidden */
     text-align: center;
     padding: 20px;
     border: 2px solid #ccc;
