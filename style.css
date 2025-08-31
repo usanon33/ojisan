@@ -6,7 +6,11 @@ body {
     justify-content: center;
     height: 100vh;
     margin: 0;
-    background-color: #f0f0f0;
+    background-image: url('back.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 h1 {
@@ -42,7 +46,14 @@ h1 {
     padding: 20px;
     border: 2px solid #ccc;
     border-radius: 10px;
-    background-color: #fff;
+    background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('ojisan2.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#game-container h2, #text-to-type, #timer, #score {
+    color: #000; /* Black text for better contrast on background image */
 }
 
 #text-to-type {
@@ -50,6 +61,7 @@ h1 {
     margin-bottom: 20px;
     padding: 10px;
     border: 1px solid #ddd;
+    background-color: rgba(255, 255, 255, 0.7); /* Slight background for the text itself */
     border-radius: 5px;
 }
 
@@ -64,6 +76,9 @@ h1 {
 #timer, #score {
     font-size: 1.2em;
     margin-top: 15px;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 5px;
+    border-radius: 5px;
 }
 
 .correct {
