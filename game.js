@@ -4,11 +4,11 @@ const ojisanPhrases = [
     "ゆきチャンから元気もらいたいナ！なんつっ亭☆",
     "愛チャン、最近、返事が、少ないね。オイラ、さびしいよ(^_^;)",
     "困ったことがあったら、いつでもオジサンに相談してネ！😅",
-    "今日のランチは、何食べたのかな？ オジサンは、カツ丼だったよ.",
+    "今日のランチは、何食べたのかな？ オジサンは、カツ丼だったよ。",
     "〇〇チャン、週末は、何してるのかな？",
     "オジサン、最近、運動不足なんだよね（汗）",
     "〇〇チャンと、今度、飲みに行きたいな〜！なんちゃって！",
-    "お疲れ様！今日も一日、大変だったね。ゆっくり休んでね.",
+    "お疲れ様！今日も一日、大変だったね。ゆっくり休んでね。",
     "愛してるよ！ナンツッテ(^ε^)-☆"
 ];
 
@@ -23,13 +23,12 @@ let currentPhraseIndex = 0;
 let timerInterval;
 let cleanPhrase = '';
 
-const kaomojiPatterns = ['(^_^;)', '(^ε^)-☆'];
-const escapedKaomojis = kaomojiPatterns.map(k => k.replace(/[-\/^$*+?.()|[\]{}]/g, '\$&')).join('|');
-
-const tokenizerRegex = new RegExp(`(${escapedKaomojis})`, 'g');
-
-const skippableForCleanRegex = new RegExp(`(?:${escapedKaomojis})|(?:〜|～|w| |　)|(?:[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}])`, 'gu');
-const skippableForTestRegex = new RegExp(`^(?:${escapedKaomojis})$|^(?:〜|～|w| |　)$|^(?:[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}])$`, 'u');
+// --- Corrected Hardcoded Regex ---
+const tokenizerRegex = /(\(^_^;\)|\(\^ε\^\)-☆)/g;
+const isKaomojiRegex = /^(\(^_^;\)|\(\^ε\^\)-☆)$/;
+const skippableForCleanRegex = /(\(^_^;\)|\(\^ε\^\)-☆|〜|～|w| |　|[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}])/gu;
+const skippableForTestRegex = /^(\(^_^;\)|\(\^ε\^\)-☆|〜|～|w| |　|[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}])$/u;
+// --- End Corrected Hardcoded Regex ---
 
 function startGame() {
     score = 0;
@@ -53,10 +52,10 @@ function loadNewPhrase() {
     cleanPhrase = phrase.replace(skippableForCleanRegex, '');
 
     textToTypeElement.innerHTML = '';
-    const parts = phrase.split(tokenizerRegex).filter(p => p);
+    const parts = phrase.split(tokenizerRegex).filter(p => p && p.length > 0);
 
     parts.forEach(part => {
-        if (new RegExp(`^(${escapedKaomojis})$`).test(part)) {
+        if (isKaomojiRegex.test(part)) {
             const charSpan = document.createElement('span');
             charSpan.innerText = part;
             textToTypeElement.appendChild(charSpan);
